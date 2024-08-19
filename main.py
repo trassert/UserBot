@@ -134,6 +134,10 @@ async def userbot(phone_number, api_id, api_hash):
             'mask_read',
             []
         )
+        settings(
+            'sleep_time',
+            300
+        )
     earnbots = settings('earnbots')
     
     vk_token = settings('token_vk')
