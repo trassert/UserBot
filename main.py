@@ -267,6 +267,8 @@ async def userbot(phone_number, api_id, api_hash):
                     await sleep(int(sleep_time))
                     if tick == bch_iterator.last():
                         await event.respond(bch_iterator.next())
+        elif 'You earned' in event.text:
+            logger.info(event.text)
     
     bee_iterator = StringIterator(['🤖 Join Bots', '💻 Visit Sites', '📢 Join Channels'])
     async def earn_bee(event):
@@ -687,7 +689,20 @@ async def userbot(phone_number, api_id, api_hash):
         settings('earnbots', earnbots)
         client.remove_event_handler(vktarget, events.NewMessage(chats='vktarget'))
         await client.edit_message(event.sender_id, event.message, phrase.vk.off)
-    
+    async def settings_global(event):
+        earnbots = settings('earnbots')
+        await client.edit_message(
+            event.sender_id,
+            event.message,
+            phrase.settings.format(
+                bee='✅' if earnbots['bee'] else '❌',
+                bch='✅' if earnbots['bch'] else '❌',
+                vktarget='✅' if earnbots['vktarget'] else '❌',
+                daily='✅' if earnbots['vktarget'] else '❌',
+                freegrc='✅' if earnbots['freegrc'] else '❌',
+                arikado='✅' if earnbots['arikado'] else '❌',
+            )
+        )
     client.add_event_handler(flip_text, events.NewMessage(outgoing=True, pattern=r'\.флип'))
     client.add_event_handler(anim, events.NewMessage(outgoing=True, pattern=r'\.аним'))
     client.add_event_handler(chart, events.NewMessage(outgoing=True, pattern=r'\.денег'))
@@ -697,6 +712,7 @@ async def userbot(phone_number, api_id, api_hash):
     client.add_event_handler(sysinfo, events.NewMessage(outgoing=True, pattern=r'\.серв'))
     client.add_event_handler(ping, events.NewMessage(outgoing=True, pattern=r'\.пинг'))
     client.add_event_handler(on_off_mask_read, events.NewMessage(outgoing=True, pattern=r'\.читать'))
+    client.add_event_handler(settings_global, events.NewMessage(outgoing=True, pattern=r'\.настройки'))
     
     if earnbots['bee'] == True:
         client.add_event_handler(earn_bee, events.NewMessage(chats='ClickBeeLTCBot'))
