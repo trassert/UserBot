@@ -828,21 +828,21 @@ async def userbot(phone_number, api_id, api_hash):
             freegrc_task = create_task(miner_freegrc())
         else:
             await client.send_message('me', phrase.grc.no_token)
-    client.add_event_handler(settings_vk_off, events.NewMessage(outgoing=True, pattern=r'\-grc'))
-    client.add_event_handler(settings_vk_on, events.NewMessage(outgoing=True, pattern=r'\+grc'))
+    client.add_event_handler(settings_freegrc_off, events.NewMessage(outgoing=True, pattern=r'\-grc'))
+    client.add_event_handler(settings_freegrc_on, events.NewMessage(outgoing=True, pattern=r'\+grc'))
     
     if earnbots['arikado'] == True:
         if settings('token_arikado') != None:
             arikado_task = create_task(miner_arikado())
         else:
             await client.send_message('me', phrase.arikado.no_token)
-    client.add_event_handler(settings_vk_off, events.NewMessage(outgoing=True, pattern=r'\-arikado'))
-    client.add_event_handler(settings_vk_on, events.NewMessage(outgoing=True, pattern=r'\+arikado'))
+    client.add_event_handler(settings_arikado_off, events.NewMessage(outgoing=True, pattern=r'\-arikado'))
+    client.add_event_handler(settings_arikado_on, events.NewMessage(outgoing=True, pattern=r'\+arikado'))
     
     if earnbots['daily'] == True:
         daily_task = create_task(send_daily_message())
-    client.add_event_handler(settings_vk_off, events.NewMessage(outgoing=True, pattern=r'\-daily'))
-    client.add_event_handler(settings_vk_on, events.NewMessage(outgoing=True, pattern=r'\+daily'))
+    client.add_event_handler(settings_daily_off, events.NewMessage(outgoing=True, pattern=r'\-daily'))
+    client.add_event_handler(settings_daily_on, events.NewMessage(outgoing=True, pattern=r'\+daily'))
     
     await client.run_until_disconnected()
 
