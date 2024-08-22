@@ -37,6 +37,12 @@ logging.basicConfig(
 global_logger = logging.getLogger(__name__)
 
 lock = Lock()
+selenium_options = Options()
+selenium_options.add_experimental_option("excludeSwitches", ['enable-logging'])
+selenium_options.add_argument("--log-level=3")
+selenium_options.add_argument("--headless")
+selenium_options.set_capability("browserVersion", "117")
+selenium_options.add_argument("start-maximized")
 
 async def userbot(phone_number, api_id, api_hash):
     class logger:
@@ -99,12 +105,6 @@ async def userbot(phone_number, api_id, api_hash):
         device_model='Telegram Helpbot (trassert)',
         system_lang_code='ru',
     )
-    selenium_options = Options()
-    selenium_options.add_experimental_option("excludeSwitches", ['enable-logging'])
-    selenium_options.add_argument("--log-level=3")
-    selenium_options.add_argument("--headless")
-    selenium_options.set_capability("browserVersion", "117")
-    selenium_options.add_argument("start-maximized")
     logger.info('Запускаю клиент...')
     lock.acquire()
     await client.start(phone=phone_number)
@@ -644,6 +644,8 @@ async def userbot(phone_number, api_id, api_hash):
     
     async def settings_bee_on(event):
         earnbots = settings('earnbots')
+        if earnbots['bee'] == True:
+            return await event.edit(phrase.bee.already_on)
         earnbots['bee'] = True
         settings('earnbots', earnbots)
         client.add_event_handler(earn_bee, events.NewMessage(chats='ClickBeeLTCBot'))
@@ -658,6 +660,8 @@ async def userbot(phone_number, api_id, api_hash):
     
     async def settings_bch_on(event):
         earnbots = settings('earnbots')
+        if earnbots['bch'] == True:
+            return await event.edit(phrase.bch.already_on)
         earnbots['bch'] = True
         settings('earnbots', earnbots)
         client.add_event_handler(earn_bch, events.NewMessage(chats='adbchbot'))
@@ -673,6 +677,8 @@ async def userbot(phone_number, api_id, api_hash):
     async def settings_vk_on(event):
         if settings('token_vk') != None:
             earnbots = settings('earnbots')
+            if earnbots['vktarget'] == True:
+                return await event.edit(phrase.vk.already_on)
             earnbots['vktarget'] = True
             settings('earnbots', earnbots)
             client.add_event_handler(vktarget, events.NewMessage(chats='vktarget'))
@@ -689,6 +695,64 @@ async def userbot(phone_number, api_id, api_hash):
         settings('earnbots', earnbots)
         client.remove_event_handler(vktarget, events.NewMessage(chats='vktarget'))
         await client.edit_message(event.sender_id, event.message, phrase.vk.off)
+    
+    freegrc_task = None
+    async def settings_freegrc_on(event):
+        if settings('token_freegrc') != None:
+            if freegrc_task != None:
+                return await event.edit(phrase.grc.already_on)
+            earnbots = settings('earnbots')
+            earnbots['freegrc'] = True
+            settings('earnbots', earnbots)
+            freegrc_task = create_task(miner_freegrc())
+        else:
+            await client.send_message(
+                'me',
+                phrase.vk.no_token
+            )
+    async def settings_freegrc_off(event):
+        earnbots = settings('earnbots')
+        earnbots['freegrc'] = False
+        settings('earnbots', earnbots)
+        freegrc_task.cancel()
+        await client.edit_message(event.sender_id, event.message, phrase.grc.off)
+    
+    arikado_task = None
+    async def settings_arikado_on(event):
+        if settings('token_freegrc') != None:
+            if arikado_task != None:
+                return await event.edit(phrase.grc.already_on)
+            earnbots = settings('earnbots')
+            earnbots['freegrc'] = True
+            settings('earnbots', earnbots)
+            arikado_task = create_task(miner_freegrc())
+        else:
+            await client.send_message(
+                'me',
+                phrase.vk.no_token
+            )
+    async def settings_arikado_off(event):
+        earnbots = settings('earnbots')
+        earnbots['freegrc'] = False
+        settings('earnbots', earnbots)
+        arikado_task.cancel()
+        await client.edit_message(event.sender_id, event.message, phrase.arikado.off)
+    
+    daily_task = None
+    async def settings_daily_on(event):
+        if daily_task != None:
+            return await event.edit(phrase.grc.already_on)
+        earnbots = settings('earnbots')
+        earnbots['freegrc'] = True
+        settings('earnbots', earnbots)
+        daily_task = create_task(miner_freegrc())
+    async def settings_daily_off(event):
+        earnbots = settings('earnbots')
+        earnbots['freegrc'] = False
+        settings('earnbots', earnbots)
+        daily_task.cancel()
+        await client.edit_message(event.sender_id, event.message, phrase.daily.off)
+    
     async def settings_global(event):
         earnbots = settings('earnbots')
         await client.edit_message(
@@ -701,12 +765,33 @@ async def userbot(phone_number, api_id, api_hash):
                 daily='✅' if earnbots['vktarget'] else '❌',
                 freegrc='✅' if earnbots['freegrc'] else '❌',
                 arikado='✅' if earnbots['arikado'] else '❌',
+                token_freegrc='✅' if settings('token_freegrc') != None else '❌',
+                token_arikado='✅' if settings('token_arikado') != None else '❌',
+                token_vk='✅' if settings('token_vk') != None else '❌',
             )
         )
+    
+    async def token_add(event):
+        text = event.text.split()
+        if len(text) == 1:
+            return await event.edit(phrase.no_args)
+        elif len(text) != 3:
+            return await event.edit(phrase.bad_args)
+        elif text[1] == 'вк':
+            settings('token_vk', text[2])
+            return await event.edit(phrase.token_added)
+        elif text[1] == 'фг':
+            settings('token_freegrc', text[2])
+            return await event.edit(phrase.token_added)
+        elif text[1] == 'ар':
+            settings('token_arikado', text[2])
+            return await event.edit(phrase.token_added)
+
     client.add_event_handler(flip_text, events.NewMessage(outgoing=True, pattern=r'\.флип'))
+    client.add_event_handler(token_add, events.NewMessage(outgoing=True, pattern=r'\.токен'))
     client.add_event_handler(anim, events.NewMessage(outgoing=True, pattern=r'\.аним'))
     client.add_event_handler(chart, events.NewMessage(outgoing=True, pattern=r'\.денег'))
-    client.add_event_handler(typing, events.NewMessage(outgoing=True, pattern=r'\.т'))
+    client.add_event_handler(typing, events.NewMessage(outgoing=True, pattern=r'\.т '))
     client.add_event_handler(words, events.NewMessage(outgoing=True, pattern=r'\.слов'))
     client.add_event_handler(helper, events.NewMessage(outgoing=True, pattern=r'\.помощь'))
     client.add_event_handler(sysinfo, events.NewMessage(outgoing=True, pattern=r'\.серв'))
@@ -719,11 +804,13 @@ async def userbot(phone_number, api_id, api_hash):
         await client.send_message('ClickBeeLTCBot', bots['ClickBeeLTCBot'])
     client.add_event_handler(settings_bee_off, events.NewMessage(outgoing=True, pattern=r'\-bee'))
     client.add_event_handler(settings_bee_on, events.NewMessage(outgoing=True, pattern=r'\+bee'))
+    
     if earnbots['bch'] == True:
         client.add_event_handler(earn_bch, events.NewMessage(chats='adbchbot'))
         await client.send_message('adbchbot', bots['adbchbot'])
     client.add_event_handler(settings_bch_off, events.NewMessage(outgoing=True, pattern=r'\-bch'))
     client.add_event_handler(settings_bch_on, events.NewMessage(outgoing=True, pattern=r'\+bch'))
+    
     if earnbots['vktarget'] == True:
         if vk_token != None:
             client.add_event_handler(earn_bee, events.NewMessage(chats='adbchbot'))
@@ -735,12 +822,27 @@ async def userbot(phone_number, api_id, api_hash):
             )
     client.add_event_handler(settings_vk_off, events.NewMessage(outgoing=True, pattern=r'\-vk'))
     client.add_event_handler(settings_vk_on, events.NewMessage(outgoing=True, pattern=r'\+vk'))
+    
     if earnbots['freegrc'] == True:
-        create_task(miner_freegrc())
+        if settings('token_freegrc') != None:
+            freegrc_task = create_task(miner_freegrc())
+        else:
+            await client.send_message('me', phrase.grc.no_token)
+    client.add_event_handler(settings_vk_off, events.NewMessage(outgoing=True, pattern=r'\-grc'))
+    client.add_event_handler(settings_vk_on, events.NewMessage(outgoing=True, pattern=r'\+grc'))
+    
     if earnbots['arikado'] == True:
-        create_task(miner_arikado())
+        if settings('token_arikado') != None:
+            arikado_task = create_task(miner_arikado())
+        else:
+            await client.send_message('me', phrase.arikado.no_token)
+    client.add_event_handler(settings_vk_off, events.NewMessage(outgoing=True, pattern=r'\-arikado'))
+    client.add_event_handler(settings_vk_on, events.NewMessage(outgoing=True, pattern=r'\+arikado'))
+    
     if earnbots['daily'] == True:
-        create_task(send_daily_message())
+        daily_task = create_task(send_daily_message())
+    client.add_event_handler(settings_vk_off, events.NewMessage(outgoing=True, pattern=r'\-daily'))
+    client.add_event_handler(settings_vk_on, events.NewMessage(outgoing=True, pattern=r'\+daily'))
     
     await client.run_until_disconnected()
 
