@@ -17,7 +17,7 @@ from telethon.sync import TelegramClient
 from telethon import events
 from asyncio import sleep, create_task, run
 from datetime import datetime, timedelta
-from os import remove
+from os import remove, path
 from threading import Thread, Lock
 
 from modules.system_info import *
@@ -56,45 +56,45 @@ async def userbot(phone_number, api_id, api_hash):
         if value != None:
             logger.info(f'Значение {key} теперь {value}')
             try:
-                with open(f'clients\\{phone_number}.json', 'r', encoding='utf-8') as f:
+                with open(path.join('clients', f'{phone_number}.json'), 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                with open(f'clients\\{phone_number}.json', 'w', encoding='utf-8') as f:
+                with open(path.join('clients', f'{phone_number}.json'), 'w', encoding='utf-8') as f:
                     data[key] = value
                     data = dict(sorted(data.items()))
                     return json.dump(data, f, indent=4, ensure_ascii=False)
             except FileNotFoundError:
                 logger.error('Файл не найден')
-                with open(f'clients\\{phone_number}.json', 'w', encoding='utf-8') as f:
+                with open(path.join('clients', f'{phone_number}.json'), 'w', encoding='utf-8') as f:
                     data = {}
                     data[key] = value
                     return json.dump(data, f, indent=4)
             except json.decoder.JSONDecodeError:
                 logger.error('Ошибка при чтении файла')
-                with open(f'clients\\{phone_number}.json', 'w', encoding='utf-8') as f:
+                with open(path.join('clients', f'{phone_number}.json'), 'w', encoding='utf-8') as f:
                     json.dump({}, f, indent=4)
                 return None
         elif delete != None:
             logger.info(f'Удаляю ключ: {key}')
-            with open(f'clients\\{phone_number}.json', 'r', encoding='utf-8') as f:
+            with open(path.join('clients', f'{phone_number}.json'), 'r', encoding='utf-8') as f:
                 data = json.load(f)
-            with open(f'clients\\{phone_number}.json', 'w', encoding='utf-8') as f:
+            with open(path.join('clients', f'{phone_number}.json'), 'w', encoding='utf-8') as f:
                 if key in data:
                     del data[key]
                 return json.dump(data, f, indent=4, ensure_ascii=False)
         else:
             logger.info(f'Получаю ключ: {key}')
             try:
-                with open(f'clients\\{phone_number}.json', 'r', encoding='utf-8') as f:
+                with open(path.join('clients', f'{phone_number}.json'), 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     return data.get(key)
             except json.decoder.JSONDecodeError:
                 logger.error('Ошибка при чтении файла')
-                with open(f'clients\\{phone_number}.json', 'w', encoding='utf-8') as f:
+                with open(path.join('clients', f'{phone_number}.json'), 'w', encoding='utf-8') as f:
                     json.dump({}, f, indent=4)
                 return None
             except FileNotFoundError:
                 logger.error('Файл не найден')
-                with open(f'clients\\{phone_number}.json', 'w', encoding='utf-8') as f:
+                with open(path.join('clients', f'{phone_number}.json'), 'w', encoding='utf-8') as f:
                     json.dump({}, f, indent=4)
                 return None
     client = TelegramClient(
@@ -856,7 +856,7 @@ async def userbot(phone_number, api_id, api_hash):
 
 if __name__ == '__main__':
     try:
-        with open('clients\\all.json', 'r') as f:
+        with open(path.join('clients', 'all.json'), 'r') as f:
             all = json.load(f)
             for number in all.keys():
                 Thread(
@@ -870,7 +870,7 @@ if __name__ == '__main__':
                     )
                 ).start()
     except FileNotFoundError:
-        with open('clients\\all.json', 'w') as f:
+        with open(path.join('clients', 'all.json'), 'w') as f:
             json.dump(
                 {
                     "Номер телефона 1": {
