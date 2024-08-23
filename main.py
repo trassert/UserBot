@@ -709,6 +709,7 @@ async def userbot(phone_number, api_id, api_hash):
             earnbots['freegrc'] = True
             settings('earnbots', earnbots)
             tasks['freegrc'] = create_task(miner_freegrc())
+            return await event.edit(phrase.grc.on)
         else:
             await client.send_message(
                 'me',
@@ -722,7 +723,7 @@ async def userbot(phone_number, api_id, api_hash):
         await client.edit_message(event.sender_id, event.message, phrase.grc.off)
     
     async def settings_arikado_on(event):
-        if settings('token_freegrc') != None:
+        if settings('token_arikado') != None:
             try:
                 if tasks['arikado'] != None:
                     return await event.edit(phrase.grc.already_on)
@@ -732,6 +733,7 @@ async def userbot(phone_number, api_id, api_hash):
             earnbots['freegrc'] = True
             settings('earnbots', earnbots)
             tasks['arikado'] = create_task(miner_freegrc())
+            return await event.edit(phrase.arikado.on)
         else:
             await client.send_message(
                 'me',

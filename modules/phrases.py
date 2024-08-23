@@ -2,10 +2,12 @@ class grc:
     no_token = '❌ : У вас нет токена для FreeGrc!'
     already_on = '❌ : FreeGRC уже запущен!'
     off = '❌ : FreeGRC отключён!'
+    on = '✅ : Работаю на FreeGRC!'
 class arikado:
     no_token = '❌ : У вас нет токена для Arikado!'
     already_on = '❌ : Arikado уже запущен!'
     off = '❌ : Arikado отключён!'
+    on = '✅ : Работаю на Arikado!'
 class vk:
     no_token = '❌ : У вас нет токена для VK!'
     on = '✅ : Работаю на VKTarget!'
