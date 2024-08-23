@@ -17,7 +17,7 @@ from telethon.sync import TelegramClient
 from telethon import events
 from asyncio import sleep, create_task, run
 from datetime import datetime, timedelta
-from os import remove, path
+from os import remove, path, mkdir
 from threading import Thread, Lock
 
 from modules.system_info import *
@@ -870,6 +870,7 @@ if __name__ == '__main__':
                     )
                 ).start()
     except FileNotFoundError:
+        mkdir('clients')
         with open(path.join('clients', 'all.json'), 'w') as f:
             json.dump(
                 {
