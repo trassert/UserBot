@@ -730,7 +730,7 @@ async def userbot(phone_number, api_id, api_hash):
             except KeyError:
                 pass
             earnbots = settings('earnbots')
-            earnbots['freegrc'] = True
+            earnbots['arikado'] = True
             settings('earnbots', earnbots)
             tasks['arikado'] = create_task(miner_freegrc())
             return await event.edit(phrase.arikado.on)
@@ -753,7 +753,7 @@ async def userbot(phone_number, api_id, api_hash):
         except KeyError:
             pass
         earnbots = settings('earnbots')
-        earnbots['freegrc'] = True
+        earnbots['daily'] = True
         settings('earnbots', earnbots)
         tasks['daily'] = create_task(miner_freegrc())
         return await event.edit(phrase.daily.on)
