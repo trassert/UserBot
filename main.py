@@ -756,6 +756,7 @@ async def userbot(phone_number, api_id, api_hash):
         earnbots['freegrc'] = True
         settings('earnbots', earnbots)
         tasks['daily'] = create_task(miner_freegrc())
+        return await event.edit(phrase.daily.on)
     async def settings_daily_off(event):
         earnbots = settings('earnbots')
         earnbots['freegrc'] = False
@@ -772,7 +773,7 @@ async def userbot(phone_number, api_id, api_hash):
                 bee='✅' if earnbots['bee'] else '❌',
                 bch='✅' if earnbots['bch'] else '❌',
                 vktarget='✅' if earnbots['vktarget'] else '❌',
-                daily='✅' if earnbots['vktarget'] else '❌',
+                daily='✅' if earnbots['daily'] else '❌',
                 freegrc='✅' if earnbots['freegrc'] else '❌',
                 arikado='✅' if earnbots['arikado'] else '❌',
                 token_freegrc='✅' if settings('token_freegrc') != None else '❌',
