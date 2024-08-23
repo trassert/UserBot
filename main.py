@@ -682,8 +682,8 @@ async def userbot(phone_number, api_id, api_hash):
                 return await event.edit(phrase.vk.already_on)
             earnbots['vktarget'] = True
             settings('earnbots', earnbots)
-            client.add_event_handler(vktarget, events.NewMessage(chats='vktarget'))
-            await client.send_message('vktarget', bots['vktarget'])
+            client.add_event_handler(vktarget, events.NewMessage(chats='vktarget_bot'))
+            await client.send_message('vktarget_bot', bots['vktarget_bot'])
             await client.edit_message(event.sender_id, event.message, phrase.vk.on)
         else:
             await client.send_message(
@@ -694,7 +694,7 @@ async def userbot(phone_number, api_id, api_hash):
         earnbots = settings('earnbots')
         earnbots['vktarget'] = False
         settings('earnbots', earnbots)
-        client.remove_event_handler(vktarget, events.NewMessage(chats='vktarget'))
+        client.remove_event_handler(vktarget, events.NewMessage(chats='vktarget_bot'))
         await client.edit_message(event.sender_id, event.message, phrase.vk.off)
     
     tasks = {}
@@ -823,7 +823,7 @@ async def userbot(phone_number, api_id, api_hash):
     
     if earnbots['vktarget'] == True:
         if vk_token != None:
-            client.add_event_handler(earn_bee, events.NewMessage(chats='adbchbot'))
+            client.add_event_handler(vktarget, events.NewMessage(chats='vktarget_bot'))
             await client.send_message('vktarget', bots['vktarget'])
         else:
             await client.send_message(
