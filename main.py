@@ -684,7 +684,7 @@ async def userbot(phone_number, api_id, api_hash):
             settings('earnbots', earnbots)
             client.add_event_handler(vktarget, events.NewMessage(chats='vktarget_bot'))
             await client.send_message('vktarget_bot', bots['vktarget_bot'])
-            await client.edit_message(event.sender_id, event.message, phrase.vk.on)
+            await event.edit(phrase.vk.on)
         else:
             await client.send_message(
                 'me',
@@ -824,7 +824,7 @@ async def userbot(phone_number, api_id, api_hash):
     if earnbots['vktarget'] == True:
         if vk_token != None:
             client.add_event_handler(vktarget, events.NewMessage(chats='vktarget_bot'))
-            await client.send_message('vktarget', bots['vktarget'])
+            await client.send_message('vktarget_bot', bots['vktarget_bot'])
         else:
             await client.send_message(
                 'me',
