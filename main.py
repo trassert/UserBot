@@ -263,7 +263,7 @@ async def userbot(phone_number, api_id, api_hash):
         elif 'Please check later' in event.text:
                     tick = bch_iterator.last()
                     sleep_time = settings('sleep_time')
-                    logger.info(f'Сплю {sleep_time} сек.')
+                    logger.info(f'Сплю {sleep_time} сек')
                     await sleep(int(sleep_time))
                     if tick == bch_iterator.last():
                         await event.respond(bch_iterator.next())
@@ -304,7 +304,7 @@ async def userbot(phone_number, api_id, api_hash):
             task = bee_iterator.next()
             if task == '📢 Join Channels':
                 sleep_time = settings('sleep_time')
-                logger.info(f'Сплю {sleep_time} сек.')
+                logger.info(f'Сплю {sleep_time} сек')
                 await sleep(int(sleep_time))
                 if task == bee_iterator.last():
                     await event.respond(task)
@@ -696,15 +696,18 @@ async def userbot(phone_number, api_id, api_hash):
         client.remove_event_handler(vktarget, events.NewMessage(chats='vktarget'))
         await client.edit_message(event.sender_id, event.message, phrase.vk.off)
     
-    freegrc_task = None
+    tasks = {}
     async def settings_freegrc_on(event):
         if settings('token_freegrc') != None:
-            if freegrc_task != None:
-                return await event.edit(phrase.grc.already_on)
+            try:
+                if tasks['freegrc'] != None:
+                    return await event.edit(phrase.grc.already_on)
+            except KeyError:
+                pass
             earnbots = settings('earnbots')
             earnbots['freegrc'] = True
             settings('earnbots', earnbots)
-            freegrc_task = create_task(miner_freegrc())
+            tasks['freegrc'] = create_task(miner_freegrc())
         else:
             await client.send_message(
                 'me',
@@ -714,18 +717,20 @@ async def userbot(phone_number, api_id, api_hash):
         earnbots = settings('earnbots')
         earnbots['freegrc'] = False
         settings('earnbots', earnbots)
-        freegrc_task.cancel()
+        tasks['freegrc'].cancel()
         await client.edit_message(event.sender_id, event.message, phrase.grc.off)
     
-    arikado_task = None
     async def settings_arikado_on(event):
         if settings('token_freegrc') != None:
-            if arikado_task != None:
-                return await event.edit(phrase.grc.already_on)
+            try:
+                if tasks['arikado'] != None:
+                    return await event.edit(phrase.grc.already_on)
+            except KeyError:
+                pass
             earnbots = settings('earnbots')
             earnbots['freegrc'] = True
             settings('earnbots', earnbots)
-            arikado_task = create_task(miner_freegrc())
+            tasks['arikado'] = create_task(miner_freegrc())
         else:
             await client.send_message(
                 'me',
@@ -735,22 +740,24 @@ async def userbot(phone_number, api_id, api_hash):
         earnbots = settings('earnbots')
         earnbots['freegrc'] = False
         settings('earnbots', earnbots)
-        arikado_task.cancel()
+        tasks['arikado'].cancel()
         await client.edit_message(event.sender_id, event.message, phrase.arikado.off)
     
-    daily_task = None
     async def settings_daily_on(event):
-        if daily_task != None:
-            return await event.edit(phrase.grc.already_on)
+        try:
+            if tasks['daily'] != None:
+                return await event.edit(phrase.grc.already_on)
+        except KeyError:
+            pass
         earnbots = settings('earnbots')
         earnbots['freegrc'] = True
         settings('earnbots', earnbots)
-        daily_task = create_task(miner_freegrc())
+        tasks['daily'] = create_task(miner_freegrc())
     async def settings_daily_off(event):
         earnbots = settings('earnbots')
         earnbots['freegrc'] = False
         settings('earnbots', earnbots)
-        daily_task.cancel()
+        tasks['daily'].cancel()
         await client.edit_message(event.sender_id, event.message, phrase.daily.off)
     
     async def settings_global(event):
@@ -825,7 +832,7 @@ async def userbot(phone_number, api_id, api_hash):
     
     if earnbots['freegrc'] == True:
         if settings('token_freegrc') != None:
-            freegrc_task = create_task(miner_freegrc())
+            tasks['freegrc'] = create_task(miner_freegrc())
         else:
             await client.send_message('me', phrase.grc.no_token)
     client.add_event_handler(settings_freegrc_off, events.NewMessage(outgoing=True, pattern=r'\-grc'))
@@ -833,14 +840,14 @@ async def userbot(phone_number, api_id, api_hash):
     
     if earnbots['arikado'] == True:
         if settings('token_arikado') != None:
-            arikado_task = create_task(miner_arikado())
+            tasks['arikado'] = create_task(miner_arikado())
         else:
             await client.send_message('me', phrase.arikado.no_token)
     client.add_event_handler(settings_arikado_off, events.NewMessage(outgoing=True, pattern=r'\-arikado'))
     client.add_event_handler(settings_arikado_on, events.NewMessage(outgoing=True, pattern=r'\+arikado'))
     
     if earnbots['daily'] == True:
-        daily_task = create_task(send_daily_message())
+        tasks['daily'] = create_task(send_daily_message())
     client.add_event_handler(settings_daily_off, events.NewMessage(outgoing=True, pattern=r'\-daily'))
     client.add_event_handler(settings_daily_on, events.NewMessage(outgoing=True, pattern=r'\+daily'))
     
@@ -875,3 +882,4 @@ if __name__ == '__main__':
                     }
                 }
             )
+        global_logger.info('Заполните, пожалуйста, файл clients\\all.json')
