@@ -712,7 +712,7 @@ async def userbot(phone_number, api_id, api_hash):
         else:
             await client.send_message(
                 'me',
-                phrase.vk.no_token
+                phrase.grc.no_token
             )
     async def settings_freegrc_off(event):
         earnbots = settings('earnbots')
@@ -735,7 +735,7 @@ async def userbot(phone_number, api_id, api_hash):
         else:
             await client.send_message(
                 'me',
-                phrase.vk.no_token
+                phrase.arikado.no_token
             )
     async def settings_arikado_off(event):
         earnbots = settings('earnbots')
