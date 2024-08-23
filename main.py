@@ -40,6 +40,7 @@ lock = Lock()
 selenium_options = Options()
 selenium_options.add_experimental_option("excludeSwitches", ['enable-logging'])
 selenium_options.add_argument("--log-level=3")
+selenium_options.add_argument("--disable-dev-shm-usage")
 selenium_options.add_argument("--headless")
 selenium_options.set_capability("browserVersion", "117")
 selenium_options.add_argument("start-maximized")
@@ -880,6 +881,6 @@ if __name__ == '__main__':
                         "api_id": "123456789",
                         "api_hash": "какие то буковки"
                     }
-                }
+                }, f
             )
         global_logger.info('Заполните, пожалуйста, файл clients\\all.json')
