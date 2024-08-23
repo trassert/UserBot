@@ -856,7 +856,7 @@ async def userbot(phone_number, api_id, api_hash):
 
 if __name__ == '__main__':
     try:
-        with open(path.join('clients', 'all.json'), 'r') as f:
+        with open(path.join('clients', 'all.json'), 'r', encoding='utf-8') as f:
             all = json.load(f)
             for number in all.keys():
                 Thread(
@@ -871,7 +871,7 @@ if __name__ == '__main__':
                 ).start()
     except FileNotFoundError:
         mkdir('clients')
-        with open(path.join('clients', 'all.json'), 'w') as f:
+        with open(path.join('clients', 'all.json'), 'w', encoding='utf-8') as f:
             json.dump(
                 {
                     "Номер телефона 1": {
@@ -882,6 +882,8 @@ if __name__ == '__main__':
                         "api_id": "123456789",
                         "api_hash": "какие то буковки"
                     }
-                }, f
+                },
+                f,
+                indent=4
             )
         global_logger.info('Заполните, пожалуйста, файл clients\\all.json')
