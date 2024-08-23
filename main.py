@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import re
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -378,7 +379,7 @@ async def userbot(phone_number, api_id, api_hash):
                 sleep_time = int(cache[0]) * 60 + int(cache[1]) + 20
                 logger.info(f'Сплю {sleep_time} сек')
                 await sleep(sleep_time)
-            except:
+            except TimeoutException:
                 logger.info('Нет необходимости спать')
             wait.until(EC.element_to_be_clickable((By.ID, 'roll_button')))
             element = driver.find_element(By.ID, 'roll_button')
@@ -405,7 +406,7 @@ async def userbot(phone_number, api_id, api_hash):
                 bal = driver.find_element(
                     By.XPATH, '//p[contains(text(), "Welcome")]').text.split(':')[1].replace(')', '')
                 logger.info(f'Прокручено, теперь на балансе {bal}')
-            except:
+            except TimeoutException:
                 wait.until(EC.visibility_of_element_located((By.ID, 'main_block')))
                 data = driver.find_element(
                     By.ID, 'main_block').text.split('\n')[-1].split(':')
