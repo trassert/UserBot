@@ -142,7 +142,7 @@ async def userbot(phone_number, api_id, api_hash):
     earnbots = settings('earnbots')
     
     vk_token = settings('token_vk')
-    vk = VKMethods(vk_token)
+    vk = VKMethods(logger=logger, token=vk_token)
     async def vktarget(event):
         'Автозаработок на VKtarget'
         await event.mark_read()
