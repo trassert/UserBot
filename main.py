@@ -367,6 +367,7 @@ async def userbot(phone_number, api_id, api_hash):
             driver.get(url)
             driver.add_cookie(grc_cookies)
             driver.refresh()
+            logger.info('Получил страницу')
             try:
                 wait.until(EC.visibility_of_element_located(
                     (By.ID, 'roll_wait_text')))
@@ -396,6 +397,7 @@ async def userbot(phone_number, api_id, api_hash):
             driver.get(arikado_url)
             driver.add_cookie(arikado_cookies)
             driver.refresh()
+            logger.info('Получил страницу')
             try:
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@value='Claim']")))
                 driver.find_element(By.XPATH, "//input[@value='Claim']").click()
@@ -723,7 +725,7 @@ async def userbot(phone_number, api_id, api_hash):
         if settings('token_arikado') != None:
             try:
                 if tasks['arikado'] != None:
-                    return await event.edit(phrase.grc.already_on)
+                    return await event.edit(phrase.arikado.already_on)
             except KeyError:
                 pass
             earnbots = settings('earnbots')
@@ -738,7 +740,7 @@ async def userbot(phone_number, api_id, api_hash):
             )
     async def settings_arikado_off(event):
         earnbots = settings('earnbots')
-        earnbots['freegrc'] = False
+        earnbots['arikado'] = False
         settings('earnbots', earnbots)
         tasks['arikado'].cancel()
         await client.edit_message(event.sender_id, event.message, phrase.arikado.off)
@@ -746,7 +748,7 @@ async def userbot(phone_number, api_id, api_hash):
     async def settings_daily_on(event):
         try:
             if tasks['daily'] != None:
-                return await event.edit(phrase.grc.already_on)
+                return await event.edit(phrase.daily.already_on)
         except KeyError:
             pass
         earnbots = settings('earnbots')
