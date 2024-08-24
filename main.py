@@ -400,8 +400,7 @@ async def userbot(phone_number, api_id, api_hash):
             driver.add_cookie(arikado_cookies)
             driver.refresh()
             try:
-                wait.until(EC.element_to_be_clickable(
-                    (By.XPATH, "//input[@value='Claim']")))
+                wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@value='Claim']")))
                 driver.find_element(By.XPATH, "//input[@value='Claim']").click()
                 bal = driver.find_element(
                     By.XPATH, '//p[contains(text(), "Welcome")]').text.split(':')[1].replace(')', '')
@@ -733,7 +732,7 @@ async def userbot(phone_number, api_id, api_hash):
             earnbots = settings('earnbots')
             earnbots['arikado'] = True
             settings('earnbots', earnbots)
-            tasks['arikado'] = create_task(miner_freegrc())
+            tasks['arikado'] = create_task(miner_arikado())
             return await event.edit(phrase.arikado.on)
         else:
             await client.send_message(
@@ -756,7 +755,7 @@ async def userbot(phone_number, api_id, api_hash):
         earnbots = settings('earnbots')
         earnbots['daily'] = True
         settings('earnbots', earnbots)
-        tasks['daily'] = create_task(miner_freegrc())
+        tasks['daily'] = create_task(send_daily_message())
         return await event.edit(phrase.daily.on)
     async def settings_daily_off(event):
         earnbots = settings('earnbots')
