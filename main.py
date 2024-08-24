@@ -31,11 +31,11 @@ import modules.phrases as phrase
 
 logging.basicConfig(
     level="INFO",
-    format="%(message)s",
+    format="(%(threadName)s) : [%(funcName)s] : %(message)s",
     datefmt="[%X]",
     handlers=[RichHandler(rich_tracebacks=True)]
 )
-global_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 lock = Lock()
 selenium_options = Options()
@@ -47,11 +47,6 @@ selenium_options.set_capability("browserVersion", "117")
 selenium_options.add_argument("start-maximized")
 
 async def userbot(phone_number, api_id, api_hash):
-    class logger:
-        def info(message):
-            global_logger.info(f'({phone_number}): {message}')
-        def error(message):
-            global_logger.error(f'({phone_number}): {message}')
     def settings(key, value=None, delete=None):
         'Изменить/получить ключ из настроек'
         if value != None:
@@ -363,6 +358,7 @@ async def userbot(phone_number, api_id, api_hash):
             return await event.respond(bee_iterator.next())
     
     async def miner_freegrc():
+        logger.info('FreeGRC запущен')
         driver = webdriver.Chrome(options=selenium_options)
         wait = WebDriverWait(driver, 10)
         url = 'https://freegridco.in/#free_roll'
@@ -388,6 +384,7 @@ async def userbot(phone_number, api_id, api_hash):
             balance = driver.find_element(By.ID, 'balance').text
             logger.info(f'Прокручено, теперь на балансе {balance} GRC')
     async def miner_arikado():
+        logger.info('Arikado запущен')
         driver = webdriver.Chrome(options=selenium_options)
         wait = WebDriverWait(driver, 10)
         arikado_url = 'https://grc.arikado.ru/#faucet'
@@ -870,7 +867,8 @@ if __name__ == '__main__':
                             all[number]['api_id'], 
                             all[number]['api_hash']
                         ),
-                    )
+                    ),
+                    name=number
                 ).start()
     except FileNotFoundError:
         mkdir('clients')
@@ -889,4 +887,4 @@ if __name__ == '__main__':
                 f,
                 indent=4
             )
-        global_logger.info('Заполните, пожалуйста, файл clients\\all.json')
+        logger.info('Заполните, пожалуйста, файл clients\\all.json')
