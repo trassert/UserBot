@@ -758,7 +758,7 @@ async def userbot(phone_number, api_id, api_hash):
         return await event.edit(phrase.daily.on)
     async def settings_daily_off(event):
         earnbots = settings('earnbots')
-        earnbots['freegrc'] = False
+        earnbots['daily'] = False
         settings('earnbots', earnbots)
         tasks['daily'].cancel()
         await client.edit_message(event.sender_id, event.message, phrase.daily.off)
