@@ -412,33 +412,35 @@ async def userbot(phone_number, api_id, api_hash):
                 logger.info(f'Сплю {sleeptime} сек')
                 await sleep(sleeptime)
     
+    async def get_last_sent_date():
+            last = settings('last_sent')
+            if last != None:
+                last = last.replace(':', '-').replace('.', '-').replace(' ', '-').split('-')
+            try:
+                return datetime(int(last[0]), int(last[1]), int(last[2]), int(last[3]), int(last[4]), int(last[5]), int(last[6]))
+            except:
+                return None
+    async def update_last_sent_date(today):
+        settings('last_sent', str(today))
     async def send_daily_message():
-        if earnbots['daily'] != False:
-            async def get_last_sent_date():
-                l = settings('last_sent').replace(':', '-').replace('.', '-').replace(' ', '-').split('-')
-                try:
-                    return datetime(int(l[0]), int(l[1]), int(l[2]), int(l[3]), int(l[4]), int(l[5]), int(l[6]))
-                except:
-                    return None
-            async def update_last_message_sent_date(today):
-                settings('last_sent', str(today))
-            while True:
-                today = datetime.now()
+        logger.info('Старт дневных сборов')
+        while True:
+            today = datetime.now()
+            last_message_sent_date = await get_last_sent_date()
+            'Если файл новый'
+            if last_message_sent_date is None:
+                await client.send_message('TronTRXAirdropBot', bots['TronTRXAirdropBot'])
+                await client.send_message('BlazeBNBbot', bots['BlazeBNBbot'])
+                await update_last_sent_date(today)
+                await sleep(86400)
                 last_message_sent_date = await get_last_sent_date()
-                'Если файл новый'
-                if last_message_sent_date is None:
-                    await client.send_message('TronTRXAirdropBot', bots['TronTRXAirdropBot'])
-                    await client.send_message('BlazeBNBbot', bots['BlazeBNBbot'])
-                    await update_last_message_sent_date(today)
-                    await sleep(86400)
-                    last_message_sent_date = await get_last_sent_date()
-                seconds = (timedelta(days=1) - (today - last_message_sent_date)).total_seconds()
-                'Если время прошло'
-                if today - last_message_sent_date > timedelta(days=1):
-                    await client.send_message('TronTRXAirdropBot', bots['TronTRXAirdropBot'])
-                    await client.send_message('BlazeBNBbot', bots['BlazeBNBbot'])
-                    await update_last_message_sent_date(today)
-                await sleep(seconds)
+            seconds = (timedelta(days=1) - (today - last_message_sent_date)).total_seconds()
+            'Если время прошло'
+            if today - last_message_sent_date > timedelta(days=1):
+                await client.send_message('TronTRXAirdropBot', bots['TronTRXAirdropBot'])
+                await client.send_message('BlazeBNBbot', bots['BlazeBNBbot'])
+                await update_last_sent_date(today)
+            await sleep(seconds)
     
     async def chart(event):
         arg2 = re.search(r'с\d+', event.text)
@@ -851,6 +853,7 @@ async def userbot(phone_number, api_id, api_hash):
     
     if earnbots['daily'] == True:
         tasks['daily'] = create_task(send_daily_message())
+        
     client.add_event_handler(settings_daily_off, events.NewMessage(outgoing=True, pattern=r'\-daily'))
     client.add_event_handler(settings_daily_on, events.NewMessage(outgoing=True, pattern=r'\+daily'))
     
