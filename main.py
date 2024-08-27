@@ -280,11 +280,11 @@ async def userbot(phone_number, api_id, api_hash):
             logger.info(event.text)
 
     bee_iterator = StringIterator(
-        ["🤖 Join Bots", "💻 Visit Sites", "📢 Join Channels"]
+        ['🤖 Join Bots', '💻 Visit Sites', '📢 Join Channels']
     )
 
     async def earn_bee(event):
-        "Автозаработок на ClickBee"
+        'Автозаработок на ClickBee'
         await event.mark_read()
         await sleep(3)
         if "browse the website" in event.text:
@@ -726,6 +726,9 @@ async def userbot(phone_number, api_id, api_hash):
         else:
             await client.edit_message(event.sender_id, event.message, phrase.anim.no)
 
+    async def block_voice(event):
+        print(event)
+
     async def settings_bee_on(event):
         earnbots = settings("earnbots")
         if earnbots["bee"] == True:
@@ -879,12 +882,11 @@ async def userbot(phone_number, api_id, api_hash):
             settings("token_arikado", text[2])
             return await event.edit(phrase.token_added)
 
+    client.add_event_handler(block_voice, events.NewMessage())
     client.add_event_handler(flip_text, events.NewMessage(outgoing=True, pattern=r"\.флип"))
-    client.add_event_handler(token_add, events.NewMessage(outgoing=True, pattern=r"\.токен")
-    )
+    client.add_event_handler(token_add, events.NewMessage(outgoing=True, pattern=r"\.токен"))
     client.add_event_handler(anim, events.NewMessage(outgoing=True, pattern=r"\.аним"))
-    client.add_event_handler(chart, events.NewMessage(outgoing=True, pattern=r"\.денег")
-    )
+    client.add_event_handler(chart, events.NewMessage(outgoing=True, pattern=r"\.денег"))
     client.add_event_handler(typing, events.NewMessage(outgoing=True, pattern=r"\.т "))
     client.add_event_handler(words, events.NewMessage(outgoing=True, pattern=r"\.слов"))
     client.add_event_handler(helper, events.NewMessage(outgoing=True, pattern=r"\.помощь"))
