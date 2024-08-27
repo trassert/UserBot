@@ -730,7 +730,8 @@ async def userbot(phone_number, api_id, api_hash):
             await client.edit_message(event.sender_id, event.message, phrase.anim.no)
 
     async def block_voice(event):
-        if event.media != None:
+        print(type(event.media))
+        if event.media == telethon.class.MessageMediaDocument:
             if event.media.voice == True:
                 pass
         print(type(event.peer_id))
