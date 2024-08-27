@@ -731,9 +731,12 @@ async def userbot(phone_number, api_id, api_hash):
 
     async def block_voice(event):
         if type(event.peer_id) == PeerUser:
-            if type(event.media) == MessageMediaDocument:
-                if event.media.voice == True:
-                    print('yes')
+            if client.get_me().id != event.sender_id:
+                if type(event.media) == MessageMediaDocument:
+                    if event.media.voice == True:
+                        print('yes')
+            else:
+                print('no')
 
     async def settings_bee_on(event):
         earnbots = settings("earnbots")
