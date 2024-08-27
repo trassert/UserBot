@@ -711,7 +711,6 @@ async def userbot(phone_number, api_id, api_hash):
     async def block_voice(event):
         if type(event.peer_id) != PeerUser:
             return
-        print(event)
         me = await client.get_me()
         if me.id == event.sender_id:
             return
