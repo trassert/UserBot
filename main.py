@@ -9,7 +9,7 @@ from telethon.tl.functions.messages import ImportChatInviteRequest
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.sync import TelegramClient
 from telethon import events
-from telethon.types import User
+from telethon.types import PeerUser
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
@@ -888,7 +888,7 @@ async def userbot(phone_number, api_id, api_hash):
             settings("token_arikado", text[2])
             return await event.edit(phrase.token_added)
 
-    client.add_event_handler(block_voice, events.NewMessage(outgoing=True, chats=User))
+    client.add_event_handler(block_voice, events.NewMessage(outgoing=True, chats=PeerUser))
     client.add_event_handler(flip_text, events.NewMessage(outgoing=True, pattern=r"\.флип"))
     client.add_event_handler(token_add, events.NewMessage(outgoing=True, pattern=r"\.токен"))
     client.add_event_handler(anim, events.NewMessage(outgoing=True, pattern=r"\.аним"))
