@@ -10,6 +10,7 @@ from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.sync import TelegramClient
 from telethon import events
 from telethon.types import PeerUser
+from telethon.tl.types import MessageVoice
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
@@ -731,9 +732,9 @@ async def userbot(phone_number, api_id, api_hash):
 
     async def block_voice(event):
         print(type(event.media))
-        if event.media != None:
-            if event.media.voice == True:
-                pass
+        # if event.media != None:
+        #     if event.media.voice:
+                
         print(type(event.peer_id))
 
     async def settings_bee_on(event):
