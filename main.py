@@ -719,7 +719,10 @@ async def userbot(phone_number, api_id, api_hash):
             return
         if event.media.voice == True:
             await event.delete()
-            await event.respond(settings('voice_message'))
+            text = settings('voice_message')
+            if text == None:
+                settings('voice_message', phrase.voice.default_message)
+            await event.respond()
     
     async def on_off_block_voice(event):
         if settings("block_voice") == True:
