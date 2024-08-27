@@ -684,27 +684,6 @@ async def userbot(phone_number, api_id, api_hash):
         "Просматривает сообщение"
         return await event.mark_read()
 
-    async def on_off_mask_read(event):
-        all_chats = settings("mask_read")
-        if event.chat_id in all_chats:
-            all_chats.remove(event.chat_id)
-            settings("mask_read", all_chats)
-            event.client.remove_event_handler(
-                mask_read_any, events.NewMessage(chats=event.chat_id)
-            )
-            return await event.client.edit_message(
-                event.sender_id, event.message, phrase.read.off
-            )
-        else:
-            all_chats.append(event.chat_id)
-            settings("mask_read", all_chats)
-            event.client.add_event_handler(
-                mask_read_any, events.NewMessage(chats=event.chat_id)
-            )
-            return await event.client.edit_message(
-                event.sender_id, event.message, phrase.read.on
-            )
-
     async def flip_text(event):
         text = event.text.split(" ", maxsplit=1)[1]
         final_str = ""
@@ -730,13 +709,47 @@ async def userbot(phone_number, api_id, api_hash):
             await client.edit_message(event.sender_id, event.message, phrase.anim.no)
 
     async def block_voice(event):
-        if type(event.peer_id) == PeerUser:
-            if client.get_me().id != event.sender_id:
-                if type(event.media) == MessageMediaDocument:
-                    if event.media.voice == True:
-                        print('yes')
-            else:
-                print('no')
+        if type(event.peer_id) != PeerUser:
+            return
+        print(event)
+        if await client.get_me().id == event.sender_id:
+            return
+        if type(event.media) != MessageMediaDocument:
+            return
+        if event.media.voice == True:
+            await event.delete()
+            await event.respond(settings('voice_message'))
+    
+    async def on_off_block_voice(event):
+        if settings("block_voice") == True:
+            settings("block_voice", False)
+            await event.edit(phrase.voice.block)
+            client.add_event_handler(block_voice, events.NewMessage())
+        else:
+            settings("block_voice", True)
+            await event.edit(phrase.voice.unblock)
+            client.remove_event_handler(block_voice, events.NewMessage())
+    
+    async def on_off_mask_read(event):
+        all_chats = settings("mask_read")
+        if event.chat_id in all_chats:
+            all_chats.remove(event.chat_id)
+            settings("mask_read", all_chats)
+            event.client.remove_event_handler(
+                mask_read_any, events.NewMessage(chats=event.chat_id)
+            )
+            return await event.client.edit_message(
+                event.sender_id, event.message, phrase.read.off
+            )
+        else:
+            all_chats.append(event.chat_id)
+            settings("mask_read", all_chats)
+            event.client.add_event_handler(
+                mask_read_any, events.NewMessage(chats=event.chat_id)
+            )
+            return await event.client.edit_message(
+                event.sender_id, event.message, phrase.read.on
+            )
 
     async def settings_bee_on(event):
         earnbots = settings("earnbots")
@@ -891,7 +904,9 @@ async def userbot(phone_number, api_id, api_hash):
             settings("token_arikado", text[2])
             return await event.edit(phrase.token_added)
 
-    client.add_event_handler(block_voice, events.NewMessage())
+    client.add_event_handler(on_off_block_voice, events.NewMessage(outgoing=True, pattern=r"\.гс"))
+    client.add_event_handler(on_off_mask_read, events.NewMessage(outgoing=True, pattern=r"\.читать"))
+    
     client.add_event_handler(flip_text, events.NewMessage(outgoing=True, pattern=r"\.флип"))
     client.add_event_handler(token_add, events.NewMessage(outgoing=True, pattern=r"\.токен"))
     client.add_event_handler(anim, events.NewMessage(outgoing=True, pattern=r"\.аним"))
@@ -901,7 +916,6 @@ async def userbot(phone_number, api_id, api_hash):
     client.add_event_handler(helper, events.NewMessage(outgoing=True, pattern=r"\.помощь"))
     client.add_event_handler(sysinfo, events.NewMessage(outgoing=True, pattern=r"\.серв"))
     client.add_event_handler(ping, events.NewMessage(outgoing=True, pattern=r"\.пинг"))
-    client.add_event_handler(on_off_mask_read, events.NewMessage(outgoing=True, pattern=r"\.читать"))
     client.add_event_handler(settings_global, events.NewMessage(outgoing=True, pattern=r"\.настройки"))
 
     if earnbots["bee"] == True:
