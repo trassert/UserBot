@@ -712,7 +712,8 @@ async def userbot(phone_number, api_id, api_hash):
         if type(event.peer_id) != PeerUser:
             return
         print(event)
-        if await client.get_me().id == event.sender_id:
+        me = await client.get_me()
+        if me.id == event.sender_id:
             return
         if type(event.media) != MessageMediaDocument:
             return
@@ -723,11 +724,11 @@ async def userbot(phone_number, api_id, api_hash):
     async def on_off_block_voice(event):
         if settings("block_voice") == True:
             settings("block_voice", False)
-            await event.edit(phrase.voice.block)
+            await event.edit(phrase.voice.unblock)
             client.add_event_handler(block_voice, events.NewMessage())
         else:
             settings("block_voice", True)
-            await event.edit(phrase.voice.unblock)
+            await event.edit(phrase.voice.block)
             client.remove_event_handler(block_voice, events.NewMessage())
     
     async def on_off_mask_read(event):
