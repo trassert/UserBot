@@ -733,7 +733,7 @@ async def userbot(phone_number, api_id, api_hash):
         if event.media != None:
             if event.media.voice == True:
                 pass
-        print(event)
+        print(type(event.peer_id))
 
     async def settings_bee_on(event):
         earnbots = settings("earnbots")
@@ -888,7 +888,7 @@ async def userbot(phone_number, api_id, api_hash):
             settings("token_arikado", text[2])
             return await event.edit(phrase.token_added)
 
-    client.add_event_handler(block_voice, events.NewMessage(outgoing=True, chats=PeerUser))
+    client.add_event_handler(block_voice, events.NewMessage())
     client.add_event_handler(flip_text, events.NewMessage(outgoing=True, pattern=r"\.флип"))
     client.add_event_handler(token_add, events.NewMessage(outgoing=True, pattern=r"\.токен"))
     client.add_event_handler(anim, events.NewMessage(outgoing=True, pattern=r"\.аним"))
