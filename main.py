@@ -731,7 +731,7 @@ async def userbot(phone_number, api_id, api_hash):
 
     async def block_voice(event):
         print(type(event.media))
-        if event.media == None:
+        if event.media != None:
             if event.media.voice == True:
                 pass
         print(type(event.peer_id))
