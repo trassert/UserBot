@@ -722,6 +722,7 @@ async def userbot(phone_number, api_id, api_hash):
             text = settings('voice_message')
             if text == None:
                 settings('voice_message', phrase.voice.default_message)
+                text == phrase.voice.default_message
             await event.respond()
     
     async def on_off_block_voice(event):
