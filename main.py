@@ -5,17 +5,20 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import re
 
+from telethon.tl.functions.messages import ImportChatInviteRequest
+from telethon.tl.functions.channels import JoinChannelRequest
+from telethon.sync import TelegramClient
+from telethon import events
+from telethon.types import User
+
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+
 from rich.logging import RichHandler
-from telethon.tl.functions.messages import ImportChatInviteRequest
-from telethon.tl.functions.channels import JoinChannelRequest
-from telethon.sync import TelegramClient
-from telethon import events
 from asyncio import sleep, create_task, run
 from datetime import datetime, timedelta
 from os import remove, path, mkdir
@@ -727,6 +730,9 @@ async def userbot(phone_number, api_id, api_hash):
             await client.edit_message(event.sender_id, event.message, phrase.anim.no)
 
     async def block_voice(event):
+        if event.media != None:
+            if event.media.voice == True:
+                pass
         print(event)
 
     async def settings_bee_on(event):
@@ -882,7 +888,7 @@ async def userbot(phone_number, api_id, api_hash):
             settings("token_arikado", text[2])
             return await event.edit(phrase.token_added)
 
-    client.add_event_handler(block_voice, events.NewMessage(outgoing=True))
+    client.add_event_handler(block_voice, events.NewMessage(outgoing=True, chats=User))
     client.add_event_handler(flip_text, events.NewMessage(outgoing=True, pattern=r"\.флип"))
     client.add_event_handler(token_add, events.NewMessage(outgoing=True, pattern=r"\.токен"))
     client.add_event_handler(anim, events.NewMessage(outgoing=True, pattern=r"\.аним"))
