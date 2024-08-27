@@ -9,6 +9,7 @@ from telethon.tl.functions.messages import ImportChatInviteRequest
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.sync import TelegramClient
 from telethon import events
+from telethon.tl.types import MessageMediaDocument, PeerUser
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
@@ -729,11 +730,10 @@ async def userbot(phone_number, api_id, api_hash):
             await client.edit_message(event.sender_id, event.message, phrase.anim.no)
 
     async def block_voice(event):
-        print(type(event.media))
-        # if event.media != None:
-        #     if event.media.voice:
-                
-        print(type(event.peer_id))
+        if type(event.peer_id) == PeerUser:
+            if type(event.media) == MessageMediaDocument:
+                if event.media.voice == True:
+                    print('yes')
 
     async def settings_bee_on(event):
         earnbots = settings("earnbots")
