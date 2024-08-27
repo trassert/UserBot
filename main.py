@@ -725,11 +725,11 @@ async def userbot(phone_number, api_id, api_hash):
         if settings("block_voice") == True:
             settings("block_voice", False)
             await event.edit(phrase.voice.unblock)
-            client.add_event_handler(block_voice, events.NewMessage())
+            client.remove_event_handler(block_voice, events.NewMessage())
         else:
             settings("block_voice", True)
             await event.edit(phrase.voice.block)
-            client.remove_event_handler(block_voice, events.NewMessage())
+            client.add_event_handler(block_voice, events.NewMessage())
     
     async def on_off_mask_read(event):
         all_chats = settings("mask_read")
