@@ -274,9 +274,10 @@ async def userbot(phone_number, api_id, api_hash):
                 return await event.respond(bch_iterator.next())
         elif "Please check later" in event.text:
             tick = bch_iterator.last()
-            sleep_time = settings("sleep_time")
-            logger.info(f"Сплю {sleep_time} сек")
-            await sleep(int(sleep_time))
+            sleep_time = int(settings("sleep_time"))/10
+            for _ in range(10):
+                logger.info(f"Сплю {sleep_time} сек")
+                await sleep(sleep_time)
             if tick == bch_iterator.last():
                 await event.respond(bch_iterator.next())
         elif "You earned" in event.text:
@@ -317,9 +318,10 @@ async def userbot(phone_number, api_id, api_hash):
             logger.info("Нет задач")
             task = bee_iterator.next()
             if task == "📢 Join Channels":
-                sleep_time = settings("sleep_time")
-                logger.info(f"Сплю {sleep_time} сек")
-                await sleep(int(sleep_time))
+                sleep_time = int(settings("sleep_time"))/10
+                for _ in range(10):
+                    logger.info(f"Сплю {sleep_time} сек")
+                    await sleep(sleep_time)
                 if task == bee_iterator.last():
                     await event.respond(task)
             else:
