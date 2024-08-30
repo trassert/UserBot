@@ -115,7 +115,7 @@ async def userbot(phone_number, api_id, api_hash):
                 ) as f:
                     json.dump({}, f, indent=4)
                 return None
-
+    settings('sleep_time', 100)
     client = TelegramClient(
         session=f"clients/{phone_number}",
         api_id=api_id,
