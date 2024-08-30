@@ -284,7 +284,10 @@ async def userbot(phone_number, api_id, api_hash):
             logger.info(event.text)
 
     bee_iterator = StringIterator(
-        ['🤖 Join Bots', '💻 Visit Sites', '📢 Join Channels']
+        ['🤖 Join Bots', '💻 Visit Sites', '📢 Join Channels', 'stop']
+    )
+    all_bees = StringIterator(
+        ['ClickBeeDOGEBot', 'ClickBeeSHIBABot', 'ClickBeeBEESBot', 'ClickBeeBot', 'ClickBeeBTCBot', 'ClickBeeLTCBot', 'sleep']
     )
 
     async def earn_bee(event):
@@ -317,13 +320,17 @@ async def userbot(phone_number, api_id, api_hash):
         elif "NO TASKS" in event.text:
             logger.info("Нет задач")
             task = bee_iterator.next()
-            if task == "📢 Join Channels":
-                sleep_time = int(settings("sleep_time"))/10
-                for _ in range(10):
-                    logger.info(f"Сплю {sleep_time} сек")
-                    await sleep(sleep_time)
-                if task == bee_iterator.last():
-                    await event.respond(task)
+            if task == 'stop':
+                client.remove_event_handler(earn_bee)
+                bot = all_bees.next()
+                if bot == 'sleep':
+                    sleep_time = int(settings("sleep_time"))/10
+                    for _ in range(10):
+                        logger.info(f"Сплю {sleep_time} сек")
+                        await sleep(sleep_time)
+                    bot = all_bees.next()
+                client.add_event_handler(earn_bee, events.NewMessage(chats=bot))
+                client.send_message(bot, bee_iterator.next())
             else:
                 await event.respond(task)
         elif "then forward any message" in event.text:
@@ -763,15 +770,20 @@ async def userbot(phone_number, api_id, api_hash):
             return await event.edit(phrase.bee.already_on)
         earnbots["bee"] = True
         settings("earnbots", earnbots)
-        client.add_event_handler(earn_bee, events.NewMessage(chats="ClickBeeLTCBot"))
-        await client.send_message("ClickBeeLTCBot", bots["ClickBeeLTCBot"])
+        current = all_bees.next()
+        client.add_event_handler(earn_bee, events.NewMessage(chats=current))
+        message = bee_iterator.next()
+        if message != 'stop':
+            await client.send_message(current, message)
+        else:
+            await client.send_message(current, bee_iterator.next())
         await client.edit_message(event.sender_id, event.message, phrase.bee.on)
 
     async def settings_bee_off(event):
         earnbots = settings("earnbots")
         earnbots["bee"] = False
         settings("earnbots", earnbots)
-        client.remove_event_handler(earn_bee, events.NewMessage(chats="ClickBeeLTCBot"))
+        client.remove_event_handler(earn_bee)
         await client.edit_message(event.sender_id, event.message, phrase.bee.off)
 
     async def settings_bch_on(event):
