@@ -937,8 +937,9 @@ async def userbot(phone_number, api_id, api_hash):
     client.add_event_handler(settings_global, events.NewMessage(outgoing=True, pattern=r"\.настройки"))
 
     if earnbots["bee"] == True:
-        client.add_event_handler(earn_bee, events.NewMessage(chats="ClickBeeLTCBot"))
-        await client.send_message("ClickBeeLTCBot", bots["ClickBeeLTCBot"])
+        bot = all_bees.next()
+        client.add_event_handler(earn_bee, events.NewMessage(chats=bot))
+        await client.send_message(bot, bee_iterator.next())
     client.add_event_handler(
         settings_bee_off, events.NewMessage(outgoing=True, pattern=r"\-bee")
     )
