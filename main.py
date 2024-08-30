@@ -330,7 +330,7 @@ async def userbot(phone_number, api_id, api_hash):
                         await sleep(sleep_time)
                     bot = all_bees.next()
                 client.add_event_handler(earn_bee, events.NewMessage(chats=bot))
-                client.send_message(bot, bee_iterator.next())
+                await client.send_message(bot, bee_iterator.next())
             else:
                 await event.respond(task)
         elif "then forward any message" in event.text:
