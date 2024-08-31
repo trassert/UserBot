@@ -905,6 +905,15 @@ async def userbot(phone_number, api_id, api_hash):
             ),
         )
 
+    async def settings_sleep(event):
+        split = event.text.split(maxsplit=1)
+        if len(split) < 2:
+            return await event.edit(phrase.no_args)
+        arg = split[1]
+        if not arg[1].isdigit():
+            return await event.edit(phrase.bad_args)
+        settings("sleep_time", int(arg))
+        return await event.edit(phrase.sleep_time.format(sleep_time=arg))
     async def token_add(event):
         text = event.text.split()
         if len(text) == 1:
@@ -923,6 +932,7 @@ async def userbot(phone_number, api_id, api_hash):
 
     client.add_event_handler(on_off_block_voice, events.NewMessage(outgoing=True, pattern=r"\.гс"))
     client.add_event_handler(on_off_mask_read, events.NewMessage(outgoing=True, pattern=r"\.читать"))
+    client.add_event_handler(settings_sleep, events.NewMessage(outgoing=True, pattern=r"\.сон"))
     
     client.add_event_handler(flip_text, events.NewMessage(outgoing=True, pattern=r"\.флип"))
     client.add_event_handler(token_add, events.NewMessage(outgoing=True, pattern=r"\.токен"))
