@@ -996,31 +996,46 @@ async def userbot(phone_number, api_id, api_hash):
 
     client.add_event_handler(on_off_block_voice, events.NewMessage(
         outgoing=True, pattern=r'\.гс'))
-    client.add_event_handler(on_off_mask_read, events.NewMessage(
-        outgoing=True, pattern=r'\.читать'))
+    client.add_event_handler(
+        on_off_mask_read, events.NewMessage(
+            outgoing=True, pattern=r'\.читать'
+            )
+        )
     client.add_event_handler(settings_sleep, events.NewMessage(
         outgoing=True, pattern=r'\.сон'))
 
-    client.add_event_handler(flip_text, events.NewMessage(
-        outgoing=True, pattern=r'\.флип'))
-    client.add_event_handler(token_add, events.NewMessage(
-        outgoing=True, pattern=r'\.токен'))
-    client.add_event_handler(anim, events.NewMessage(
-        outgoing=True, pattern=r'\.аним'))
-    client.add_event_handler(chart, events.NewMessage(
-        outgoing=True, pattern=r'\.денег'))
-    client.add_event_handler(typing, events.NewMessage(
-        outgoing=True, pattern=r'\.т '))
-    client.add_event_handler(words, events.NewMessage(
-        outgoing=True, pattern=r'\.слов'))
-    client.add_event_handler(helper, events.NewMessage(
-        outgoing=True, pattern=r'\.помощь'))
-    client.add_event_handler(sysinfo, events.NewMessage(
-        outgoing=True, pattern=r'\.серв'))
-    client.add_event_handler(ping, events.NewMessage(
-        outgoing=True, pattern=r'\.пинг'))
-    client.add_event_handler(settings_global, events.NewMessage(
-        outgoing=True, pattern=r'\.настройки'))
+    client.add_event_handler(
+        flip_text, events.NewMessage(outgoing=True, pattern=r'\.флип')
+        )
+    client.add_event_handler(
+        token_add, events.NewMessage(outgoing=True, pattern=r'\.токен')
+        )
+    client.add_event_handler(
+        anim, events.NewMessage(outgoing=True, pattern=r'\.аним')
+        )
+    client.add_event_handler(
+        chart, events.NewMessage(outgoing=True, pattern=r'\.денег')
+        )
+    client.add_event_handler(
+        typing, events.NewMessage(outgoing=True, pattern=r'\.т ')
+        )
+    client.add_event_handler(
+        words, events.NewMessage(outgoing=True, pattern=r'\.слов')
+        )
+    client.add_event_handler(
+        helper, events.NewMessage(outgoing=True, pattern=r'\.помощь')
+        )
+    client.add_event_handler(
+        sysinfo, events.NewMessage(outgoing=True, pattern=r'\.серв')
+        )
+    client.add_event_handler(
+        ping, events.NewMessage(outgoing=True, pattern=r'\.пинг')
+        )
+    client.add_event_handler(
+        settings_global, events.NewMessage(
+            outgoing=True, pattern=r'\.настройки'
+            )
+        )
 
     if earnbots['bee']:
         bot = all_bees.next()
@@ -1092,8 +1107,11 @@ async def userbot(phone_number, api_id, api_hash):
     if earnbots['daily']:
         tasks['daily'] = create_task(send_daily_message())
     client.add_event_handler(
-        settings_daily_off, events.NewMessage(
-            outgoing=True, pattern=r'\-daily')
+        settings_daily_off,
+        events.NewMessage(
+            outgoing=True,
+            pattern=r'\-daily'
+        )
     )
     client.add_event_handler(
         settings_daily_on, events.NewMessage(outgoing=True, pattern=r'\+daily')
