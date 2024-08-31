@@ -23,7 +23,7 @@ def get_system_info():
     mem_avail = psutil.virtual_memory().available / (1024 * 1024 * 1024)
     mem_used = psutil.virtual_memory().used / (1024 * 1024 * 1024)
     mem_percent = psutil.virtual_memory().percent
-    disk_usage = psutil.disk_usage('/')
+    disk_usage = psutil.disk_usage("/")
     disk_total = disk_usage.total / (1024 * 1024 * 1024)
     disk_used = disk_usage.used / (1024 * 1024 * 1024)
     disk_free = disk_usage.free / (1024 * 1024 * 1024)
