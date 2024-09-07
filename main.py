@@ -1,12 +1,13 @@
 import re
 import json
+import random
 import logging
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from telethon import events
 from telethon.sync import TelegramClient
+from telethon import events, functions, types
 from telethon.tl.types import MessageMediaDocument, PeerUser
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
@@ -1209,23 +1210,4 @@ if __name__ == '__main__':
                 ).start()
     except FileNotFoundError:
         mkdir('clients')
-        with open(
-            path.join('clients', 'all.json'),
-            'w',
-            encoding='utf-8'
-        ) as f:
-            json.dump(
-                {
-                    'Номер телефона 1': {
-                        'api_id': '123456789',
-                        'api_hash': 'какие то буковки',
-                    },
-                    'Номер телефона 2': {
-                        'api_id': '123456789',
-                        'api_hash': 'какие то буковки',
-                    },
-                },
-                f,
-                indent=4,
-            )
         logger.info('Заполните, пожалуйста, файл clients\\all.json')
