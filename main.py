@@ -1001,46 +1001,47 @@ async def userbot(phone_number, api_id, api_hash):
         while True:
             logger.info('Проверка ботов')
             sleep_time = settings('sleep_time')
-            if earnbots['bee'] and settings('last_time_bee') is not None:
-                if (
-                    time() -
-                    sleep_time - 10 >
-                    settings('last_time_bee')
-                ):
-                    logger.info(
-                        'BEE спал слишком долго, отправляю новое сообщение'
+            if (
+                time() -
+                sleep_time - 10 >
+                settings('last_time_bee')
+            ) and (
+                earnbots['bee']
+            ):
+                logger.info(
+                    'BEE спал слишком долго, отправляю новое сообщение'
+                    )
+                if bee_iterator.next() != 'stop':
+                    await client.send_message(
+                        all_bees.last(), bee_iterator.last()
                         )
-                    if bee_iterator.next() != 'stop':
-                        await client.send_message(
-                            all_bees.last(), bee_iterator.last()
-                            )
-                    else:
-                        await client.send_message(
-                            all_bees.last(), bee_iterator.next()
-                            )
-            if earnbots['bch'] and settings('last_time_bch') is not None:
-                if (
-                    time() -
-                    sleep_time - 10 >
-                    settings('last_time_bch')
-                ):
-                    logger.info(
-                        'BCH спал слишком долго, отправляю новое сообщение'
+                else:
+                    await client.send_message(
+                        all_bees.last(), bee_iterator.next()
                         )
-                    await client.send_message('adbchbot', bch_iterator.next())
-            if earnbots['vktarget'] and settings(
-                    'last_time_vktarget'
-                    ) is not None:
-                if (
-                    time() -
-                    sleep_time - 10 >
-                    settings('last_time_vktarget')
-                ):
-                    logger.info(
-                        'VKTarget спал слишком долго,'
-                        'отправляю новое сообщение'
-                        )
-                    await client.send_message('vktarget', bots['vktarget_bot'])
+            if (
+                time() -
+                sleep_time - 10 >
+                settings('last_time_bch')
+            ) and (
+                earnbots['bch']
+            ):
+                logger.info(
+                    'BCH спал слишком долго, отправляю новое сообщение'
+                    )
+                await client.send_message('adbchbot', bch_iterator.next())
+            if (
+                time() -
+                sleep_time - 10 >
+                settings('last_time_vktarget')
+            ) and (
+                earnbots['vktarget']
+            ):
+                logger.info(
+                    'VKTarget спал слишком долго,'
+                    'отправляю новое сообщение'
+                    )
+                await client.send_message('vktarget', bots['vktarget_bot'])
             else:
                 await sleep(sleep_time)
 
