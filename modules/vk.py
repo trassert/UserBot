@@ -8,7 +8,7 @@ class VKMethods:
         self.logger = logger
 
     async def like_vk_post(self, url):
-        self.logger.info("Лайкаю пост..")
+        self.logger.info('Лайкаю пост..')
         if 'vk.com' not in url:
             return 0
         group = '-' in url
@@ -40,63 +40,63 @@ class VKMethods:
             owner_id = '-' + owner_id
         post_id = re.findall('\\d+', url[1])[0]
         response = requests.get(
-            "https://"
-            "api.vk.com/method/likes.add"
-            f"?type={type}"
-            f"&owner_id={owner_id}"
-            f"&item_id={post_id}"
-            f"&access_token={self.token}"
+            'https://'
+            'api.vk.com/method/likes.add'
+            f'?type={type}'
+            f'&owner_id={owner_id}'
+            f'&item_id={post_id}'
+            f'&access_token={self.token}'
             '&v=5.131'
         )
-        self.logger.info(f"Ответ вк: {response.json()}")
+        self.logger.info(f'Ответ вк: {response.json()}')
         if response.json().get('response').get('likes'):
             return 1
         return 0
 
     async def join_vk_group(self, url):
-        self.logger.info("Присоединяюсь к группе..")
+        self.logger.info('Присоединяюсь к группе..')
         if 'vk.com' not in url:
             return 0
         group_id = url.split('/')[-1].replace('club', '')
         response = requests.get(
-            "https://api.vk.com/method/groups.join"
-            f"?group_id={group_id}"
-            f"&access_token={self.token}"
+            'https://api.vk.com/method/groups.join'
+            f'?group_id={group_id}'
+            f'&access_token={self.token}'
             '&v=5.131'
         )
-        self.logger.info(f"Ответ вк: {response.json()}")
+        self.logger.info(f'Ответ вк: {response.json()}')
         if response.json().get('response') == 1:
             return 1
         return 0
 
     async def add_vk_friend(self, url):
-        self.logger.info("Добавляю в друзья")
+        self.logger.info('Добавляю в друзья')
         if 'vk.com' not in url:
             return 0
         user_id = url.split('/')[-1].replace('id', '')
         response = requests.get(
-            "https://api.vk.com/method/friends.add"
-            f"?user_id={user_id}"
-            f"&access_token={self.token}"
+            'https://api.vk.com/method/friends.add'
+            f'?user_id={user_id}'
+            f'&access_token={self.token}'
             '&v=5.131'
         )
-        self.logger.info(f"Ответ ВК: {response.json()}")
+        self.logger.info(f'Ответ ВК: {response.json()}')
         if response.json().get('response') == 1:
             return 1
         return 0
 
     async def get_vk_post(self, url):
-        self.logger.info("Получаю информацию о посте")
+        self.logger.info('Получаю информацию о посте')
         if 'vk.com' not in url:
             return 0
         post_id = url.split('_')[-1]
         response = requests.get(
-            "https://api.vk.com/method/wall.getById"
-            f"?posts={post_id}"
-            f"&access_token={self.token}"
+            'https://api.vk.com/method/wall.getById'
+            f'?posts={post_id}'
+            f'&access_token={self.token}'
             '&v=5.131'
         )
-        self.logger.info(f"Ответ ВК: {response.json()}")
+        self.logger.info(f'Ответ ВК: {response.json()}')
         if 'response' in response.json():
             return 1
         return 0

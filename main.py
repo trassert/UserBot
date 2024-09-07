@@ -174,6 +174,7 @@ async def userbot(phone_number, api_id, api_hash):
 
     async def vktarget(event):
         'Автозаработок на VKtarget'
+        settings('last_time_vktarget', time())
         await event.mark_read()
         await sleep(3)
         if 'Вступите в' in event.text:
@@ -242,6 +243,7 @@ async def userbot(phone_number, api_id, api_hash):
     )
 
     async def earn_bch(event):
+        settings('last_time_bch', time())
         await event.mark_read()
         await sleep(3)
         if 'Welcome' in event.text:
@@ -332,6 +334,7 @@ async def userbot(phone_number, api_id, api_hash):
 
     async def earn_bee(event):
         'Автозаработок на ClickBee'
+        settings('last_time_bee', time())
         await event.mark_read()
         await sleep(3)
         if 'browse the website' in event.text:
@@ -994,6 +997,52 @@ async def userbot(phone_number, api_id, api_hash):
             settings('token_arikado', text[2])
             return await event.edit(phrase.token_added)
 
+    async def check_bots(event):
+        while True:
+            sleep_time = settings('sleep_time')
+            if earnbots['bee'] and settings('last_time_bee') is not None:
+                if (
+                    time() -
+                    sleep_time - 10 >
+                    settings('last_time_bee')
+                ):
+                    logger.info(
+                        'BEE спал слишком долго, отправляю новое сообщение'
+                        )
+                    if bee_iterator.next() != 'stop':
+                        await client.send_message(
+                            all_bees.last(), bee_iterator.last()
+                            )
+                    else:
+                        await client.send_message(
+                            all_bees.last(), bee_iterator.next()
+                            )
+            if earnbots['bch'] and settings('last_time_bch') is not None:
+                if (
+                    time() -
+                    sleep_time - 10 >
+                    settings('last_time_bch')
+                ):
+                    logger.info(
+                        'BCH спал слишком долго, отправляю новое сообщение'
+                        )
+                    await client.send_message('adbchbot', bch_iterator.next())
+            if earnbots['vktarget'] and settings(
+                    'last_time_vktarget'
+                    ) is not None:
+                if (
+                    time() -
+                    sleep_time - 10 >
+                    settings('last_time_vktarget')
+                ):
+                    logger.info(
+                        'VKTarget спал слишком долго,'
+                        'отправляю новое сообщение'
+                        )
+                    await client.send_message('vktarget', bots['vktarget_bot'])
+            else:
+                await sleep(sleep_time)
+
     client.add_event_handler(on_off_block_voice, events.NewMessage(
         outgoing=True, pattern=r'\.гс'))
     client.add_event_handler(
@@ -1116,6 +1165,8 @@ async def userbot(phone_number, api_id, api_hash):
     client.add_event_handler(
         settings_daily_on, events.NewMessage(outgoing=True, pattern=r'\+daily')
     )
+
+    create_task(check_bots())
 
     await client.run_until_disconnected()
 
