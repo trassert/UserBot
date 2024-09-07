@@ -997,8 +997,9 @@ async def userbot(phone_number, api_id, api_hash):
             settings('token_arikado', text[2])
             return await event.edit(phrase.token_added)
 
-    async def check_bots(event):
+    async def check_bots():
         while True:
+            logger.info('Проверка ботов')
             sleep_time = settings('sleep_time')
             if earnbots['bee'] and settings('last_time_bee') is not None:
                 if (
