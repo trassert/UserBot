@@ -404,6 +404,8 @@ async def userbot(phone_number, api_id, api_hash):
                 logger.info('Бот не отвечает')
                 await event.respond('🔙 Back')
                 logger.info('Проверяю другие задачи')
+                if bee_iterator.next() != 'stop':
+                    return await event.respond(bee_iterator.last())
                 return await event.respond(bee_iterator.next())
         elif 'and join it' in event.text:
             for line in event.text.split('\n'):
@@ -432,9 +434,13 @@ async def userbot(phone_number, api_id, api_hash):
             return await event.click(text='✅ Joined')
         elif 'error' in event.text.lower():
             logger.info('Проверяю другие задачи')
-            await event.respond(bee_iterator.next())
+            if bee_iterator.next() != 'stop':
+                return await event.respond(bee_iterator.last())
+            return await event.respond(bee_iterator.next())
         elif 'new task' in event.text.lower():
             logger.info('Новые задачи!')
+            if bee_iterator.next() != 'stop':
+                return await event.respond(bee_iterator.last())
             return await event.respond(bee_iterator.next())
 
     async def miner_freegrc():
