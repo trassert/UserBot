@@ -177,7 +177,7 @@ async def userbot(phone_number, api_id, api_hash):
         'Автозаработок на VKtarget'
         settings('last_time_vktarget', time())
         await event.mark_read()
-        await sleep(3)
+        await sleep(4)
         if 'Вступите в' in event.text:
             if await vk.join_vk_group(
                 event.text.split('](')[1].split(')')[0]
@@ -246,7 +246,7 @@ async def userbot(phone_number, api_id, api_hash):
     async def earn_bch(event):
         settings('last_time_bch', time())
         await event.mark_read()
-        await sleep(3)
+        await sleep(4)
         if 'Welcome' in event.text:
             await event.respond(bch_iterator.next())
         elif "Press the 'Go to website'" in event.text:
@@ -337,7 +337,7 @@ async def userbot(phone_number, api_id, api_hash):
         'Автозаработок на ClickBee'
         settings('last_time_bee', time())
         await event.mark_read()
-        await sleep(3)
+        await sleep(4)
         if 'browse the website' in event.text:
             for row in event.reply_markup.rows:
                 for button in row.buttons:
@@ -380,7 +380,10 @@ async def userbot(phone_number, api_id, api_hash):
             else:
                 await event.respond(task)
         elif 'then forward any message' in event.text:
-            return await event.click(text='✅ Started')
+            for row in event.reply_markup.rows:
+                for button in row.buttons:
+                    if '✅' in button.text:
+                        return await event.click(text=button.text)
         elif 'FORWARD a message from that bot' in event.text:
             for line in event.text.split('\n'):
                 if 'Open the bot' in line:
@@ -432,7 +435,10 @@ async def userbot(phone_number, api_id, api_hash):
                     )
                     if skipped_button:
                         return await event.click(text=skipped_button.text)
-            return await event.click(text='✅ Joined')
+            for row in event.reply_markup.rows:
+                for button in row.buttons:
+                    if '✅' in button.text:
+                        return await event.click(text=button.text)
         elif 'error' in event.text.lower():
             logger.info('Проверяю другие задачи')
             if bee_iterator.next() != 'stop':
