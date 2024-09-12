@@ -1049,17 +1049,20 @@ async def userbot(phone_number, api_id, api_hash):
                         'VKTarget спал слишком долго,'
                         'отправляю новое сообщение'
                         )
-                    await client.send_message('vktarget', bots['vktarget_bot'])
+                    await client.send_message('vktarget_bot', bots['vktarget_bot'])
                 else:
                     await sleep(sleep_time)
             except TypeError:
                 settings('last_time_bee', 0.00)
                 settings('last_time_bch', 0.00)
                 settings('last_time_vktarget', 0.00)
-        
 
-    client.add_event_handler(on_off_block_voice, events.NewMessage(
-        outgoing=True, pattern=r'\.гс'))
+    client.add_event_handler(
+        on_off_block_voice,
+        events.NewMessage(
+            outgoing=True, pattern=r'\.гс'
+            )
+        )
     client.add_event_handler(
         on_off_mask_read, events.NewMessage(
             outgoing=True, pattern=r'\.читать'
