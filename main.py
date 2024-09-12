@@ -249,7 +249,7 @@ async def userbot(phone_number, api_id, api_hash):
         await sleep(4)
         if 'Welcome' in event.text:
             await event.respond(bch_iterator.next())
-        elif "Press the 'Go to website'" in event.text:
+        elif 'Press the "Go to website"' in event.text:
             for row in event.reply_markup.rows:
                 for button in row.buttons:
                     if button.text == '📲 Go to website':
@@ -260,7 +260,7 @@ async def userbot(phone_number, api_id, api_hash):
                             )
                         await sleep(200)
                         driver.quit()
-        elif "Press the 'Go to channel'" in event.text:
+        elif 'Press the "Go to channel"' in event.text:
             for row in event.reply_markup.rows:
                 for button in row.buttons:
                     if 'channel' in button.text:
