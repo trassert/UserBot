@@ -1011,16 +1011,11 @@ async def userbot(phone_number, api_id, api_hash):
             return await event.edit(phrase.token_added)
 
     async def check_bots():
+        await sleep(10)
         while True:
             logger.info('Проверка ботов')
             sleep_time = settings('sleep_time')
             try:
-                logger.info('bee, check: ' + str(time() - sleep_time - 10 - int(settings('last_time_bee'))))
-                logger.info('bee, check: ' + str(time() - sleep_time - 10 > int(settings('last_time_bee'))))
-                logger.info('bch, check: ' + str(time() - sleep_time - 10 - int(settings('last_time_bch'))))
-                logger.info('bch, check: ' + str(time() - sleep_time - 10 > int(settings('last_time_bch'))))
-                logger.info('bvk, check: ' + str(time() - sleep_time - 10 - int(settings('last_time_vktarget'))))
-                logger.info('bvk, check: ' + str(time() - sleep_time - 10 > int(settings('last_time_vktarget'))))
                 if (
                     time() -
                     sleep_time - 10 >
@@ -1039,6 +1034,9 @@ async def userbot(phone_number, api_id, api_hash):
                         await client.send_message(
                             all_bees.last(), bee_iterator.next()
                             )
+            except TypeError:
+                settings('last_time_bee', 0.00)
+            try:
                 if (
                     time() -
                     sleep_time - 10 >
@@ -1050,6 +1048,9 @@ async def userbot(phone_number, api_id, api_hash):
                         'BCH спал слишком долго, отправляю новое сообщение'
                         )
                     await client.send_message('adbchbot', bch_iterator.next())
+            except TypeError:
+                settings('last_time_bch', 0.00)
+            try:
                 if (
                     time() -
                     sleep_time - 10 >
@@ -1062,12 +1063,9 @@ async def userbot(phone_number, api_id, api_hash):
                         'отправляю новое сообщение'
                         )
                     await client.send_message('vktarget_bot', bots['vktarget_bot'])
-                else:
-                    await sleep(sleep_time)
             except TypeError:
-                settings('last_time_bee', 0.00)
-                settings('last_time_bch', 0.00)
                 settings('last_time_vktarget', 0.00)
+            await sleep(sleep_time)
 
     client.add_event_handler(
         on_off_block_voice,
