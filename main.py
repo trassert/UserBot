@@ -1015,6 +1015,12 @@ async def userbot(phone_number, api_id, api_hash):
             logger.info('Проверка ботов')
             sleep_time = settings('sleep_time')
             try:
+                logger.info('bee, check: ' + str(time() - sleep_time - 10 - settings('last_time_bee')))
+                logger.info('bee, check: ' + str(time() - sleep_time - 10 > settings('last_time_bee')))
+                logger.info('bch, check: ' + str(time() - sleep_time - 10 - settings('last_time_bch')))
+                logger.info('bch, check: ' + str(time() - sleep_time - 10 > settings('last_time_bch')))
+                logger.info('bvk, check: ' + str(time() - sleep_time - 10 - settings('last_time_vktarget')))
+                logger.info('bvk, check: ' + str(time() - sleep_time - 10 > settings('last_time_vktarget')))
                 if (
                     time() -
                     sleep_time - 10 >
