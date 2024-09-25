@@ -151,6 +151,22 @@ async def userbot(phone_number, api_id, api_hash):
     lock.acquire()
     await client.start(phone=phone_number)
     lock.release()
+    # async for message in client.iter_messages('trassert_ch'):
+    #     try:
+    #         await client(functions.messages.SendReactionRequest(
+    #             peer='trassert_ch',
+    #             msg_id=message.id,
+    #             big=True,
+    #             add_to_recent=True,
+    #             reaction=[types.ReactionEmoji(
+    #                 emoticon=random.choice(['❤️', '💘', '💋', '👏'])
+    #             )]
+    #         ))
+    #         logger.info('Отправил реакцию!')
+    #     except:
+    #         pass
+    #     await sleep(5)
+    # exit()
     if settings('earnbots') is None:
         logger.info('Первый запуск клиента...')
         settings(
@@ -343,7 +359,9 @@ async def userbot(phone_number, api_id, api_hash):
                 for button in row.buttons:
                     if 'Open' in button.text:
                         cache = bee_iterator.last()
-                        logger.info(f'Перехожу на сайт {get_clean_url(button.url)}')
+                        logger.info(
+                            f'Перехожу на сайт {get_clean_url(button.url)}'
+                            )
                         driver = webdriver.Chrome(options=selenium_options)
                         driver.get(button.url)
                         try:
@@ -357,6 +375,9 @@ async def userbot(phone_number, api_id, api_hash):
                         await sleep(sleeptime)
                         driver.quit()
                         if cache == bee_iterator.last():
+                            next = bee_iterator.next()
+                            if next != 'stop':
+                                return await event.respond(next)
                             return await event.respond(bee_iterator.next())
         elif "You've earned" in event.text:
             logger.info(event.text)
