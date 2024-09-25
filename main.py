@@ -574,6 +574,28 @@ async def userbot(phone_number, api_id, api_hash):
     async def update_last_sent_date(today):
         settings('last_sent', str(today))
 
+    async def daily_bots():
+        await client.send_message(
+            'TronTRXAirdropBot',
+            bots['TronTRXAirdropBot']
+        )
+        await client.send_message(
+            'BlazeBNBbot',
+            bots['BlazeBNBbot']
+        )
+        await client.send_message(
+            'plentyofficial_premium_v4bot',
+            bots['plentyofficial_premium_v4bot']
+        )
+        await client.send_message(
+            'RavenCoin_RVN_Latoken_v7bot',
+            bots['RavenCoin_RVN_Latoken_v7bot']
+        )
+        await client.send_message(
+            'EarnRVN_Referral_v5bot',
+            bots['EarnRVN_Referral_v5bot']
+        )
+
     async def send_daily_message():
         logger.info('Старт дневных сборов')
         while True:
@@ -581,10 +603,7 @@ async def userbot(phone_number, api_id, api_hash):
             last_message_sent_date = await get_last_sent_date()
             'Если файл новый'
             if last_message_sent_date is None:
-                await client.send_message(
-                    'TronTRXAirdropBot', bots['TronTRXAirdropBot']
-                )
-                await client.send_message('BlazeBNBbot', bots['BlazeBNBbot'])
+                await daily_bots()
                 await update_last_sent_date(today)
                 await sleep(86400)
                 last_message_sent_date = await get_last_sent_date()
@@ -593,10 +612,7 @@ async def userbot(phone_number, api_id, api_hash):
             ).total_seconds()
             'Если время прошло'
             if today - last_message_sent_date > timedelta(days=1):
-                await client.send_message(
-                    'TronTRXAirdropBot', bots['TronTRXAirdropBot']
-                )
-                await client.send_message('BlazeBNBbot', bots['BlazeBNBbot'])
+                await daily_bots()
                 await update_last_sent_date(today)
             await sleep(seconds)
 
