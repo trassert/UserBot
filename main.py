@@ -419,23 +419,24 @@ async def userbot(phone_number, api_id, api_hash):
                         .split('/')[0]
                     )
             logger.info(f'Отправляю сообщение боту {mybot}')
-            # try:
-            async with client.conversation(mybot, timeout=30) as conv:
-                await conv.send_message('/start')
-                response = await conv.get_response()
-                await client.forward_messages(
-                    entity=event.sender_id,
-                    messages=response.id,
-                    from_peer=response.sender_id,
-                )
-            # except:
-            #     logger.info('Бот не отвечает')
-            #     await event.respond('🔙 Back')
-            #     logger.info('Проверяю другие задачи')
-            #     next = bee_iterator.next()
-            #     if next != 'stop':
-            #         return await event.respond(next)
-            #     return await event.respond(bee_iterator.next())
+            try:
+                async with client.conversation(mybot, timeout=30) as conv:
+                    await conv.send_message('/start')
+                    response = await conv.get_response()
+                    await client.forward_messages(
+                        entity=event.sender_id,
+                        messages=response.id,
+                        from_peer=response.sender_id,
+                    )
+            except:
+                logger.info('Бот не отвечает')
+                await event.respond('🔙 Back')
+                await sleep(5)
+                logger.info('Проверяю другие задачи')
+                next = bee_iterator.next()
+                if next != 'stop':
+                    return await event.respond(next)
+                return await event.respond(bee_iterator.next())
         elif 'and join it' in event.text:
             for line in event.text.split('\n'):
                 if 'this Telegram channel' in line:
