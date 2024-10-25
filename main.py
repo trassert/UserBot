@@ -1,6 +1,5 @@
 import re
 import json
-import random
 import logging
 import pandas as pd
 import seaborn as sns
@@ -948,7 +947,7 @@ async def userbot(phone_number, api_id, api_hash):
     async def settings_freegrc_on(event):
         if settings('token_freegrc') is not None:
             try:
-                if tasks['freegrc'] is not None:
+                if tasks['freegrc'] is True:
                     return await event.edit(phrase.grc.already_on)
             except KeyError:
                 pass
@@ -970,7 +969,7 @@ async def userbot(phone_number, api_id, api_hash):
     async def settings_arikado_on(event):
         if settings('token_arikado') is not None:
             try:
-                if tasks['arikado'] is not None:
+                if tasks['arikado'] is True:
                     return await event.edit(phrase.arikado.already_on)
             except KeyError:
                 pass
@@ -991,7 +990,7 @@ async def userbot(phone_number, api_id, api_hash):
 
     async def settings_daily_on(event):
         try:
-            if tasks['daily'] is not None:
+            if tasks['daily'] is True:
                 return await event.edit(phrase.daily.already_on)
         except KeyError:
             pass
